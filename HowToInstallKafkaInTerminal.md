@@ -138,6 +138,23 @@ Reads all messages from `test-topic` from the beginning and displays them.
 
 ---
 
+## Kafka Event Overview
+
+In Kafka, an **event** (also called a **record** or **message**) is the smallest unit of data that is transmitted. Each event represents **something that happened**, and Kafka is designed to **store, process, and forward** these events in a scalable and fault-tolerant way.
+
+### 🧩 Components of a Kafka Event
+
+| Field      | Description                                                                 |
+|------------|-----------------------------------------------------------------------------|
+| **Key**    | (Optional) Used for partitioning or identifying related events.            |
+| **Value**  | The actual payload — e.g., a log entry, JSON, CSV, etc.                    |
+| **Timestamp** | The time the event was produced (or logged).                            |
+| **Headers**   | (Optional) Metadata in key-value format.                                |
+| **Offset**    | The unique ID of the event within a Kafka partition.                    |
+| **Topic**     | The logical channel the event belongs to.                               |
+
+---
+
 ## 🧹 Extra (History Review)
 
 ```bash
