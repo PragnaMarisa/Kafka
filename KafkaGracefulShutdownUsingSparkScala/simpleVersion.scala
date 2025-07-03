@@ -19,14 +19,14 @@ object KafkaShutdownHandler {
     // Initialize Spark Session
     val spark = SparkSession.builder()
       .appName("KafkaShutdownHandler")
-      .config("spark.sql.streaming.checkpointLocation", "/tmp/checkpoint")
+      // .config("spark.sql.streaming.checkpointLocation", "/tmp/checkpoint") // no need this because We are not storing the offset in checkpoint location
       .getOrCreate()
     
     import spark.implicits._
     
     // Kafka configuration
     val kafkaBootstrapServers = "localhost:9092" // Replace with your Kafka servers
-    val eventhubConnectionString = "your-eventhub-connection-string" // Replace with EventHub connection
+    val eventhubConnectionString = "your-eventhub-connection-string" // Replace with EventHub connection ?Can be a namespace of the event-hub
     
     try {
       // Start shutdown topic listener in separate thread
@@ -71,12 +71,12 @@ object KafkaShutdownHandler {
       .option("startingOffsets", "latest")
       .load()
       .select(col("value").cast("string").as("message"))
-      .filter(col("message").contains("shutdown sales"))
+      .filter(col("message").contains("shutdown sales"))// checking for the correct keyword "shutdown sales"
     
     val shutdownQuery = shutdownStream
       .writeStream
       .outputMode("append")
-      .trigger(Trigger.ProcessingTime("2 seconds"))
+      // .trigger(Trigger.ProcessingTime("2 seconds")) // if you want it to run for every 2 seconds enable this
       .foreachBatch { (batchDF: DataFrame, batchId: Long) =>
         if (!batchDF.isEmpty) {
           println(s"Shutdown signal received at batch $batchId")
